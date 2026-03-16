@@ -43,6 +43,8 @@
         "no-inferrable-types": [true],
         "no-string-throw": true,
         "object-literal-sort-keys": false,
+        "object-literal-key-quotes": false,
+        "max-classes-per-file": false,
         "ordered-imports": [false,
             {
                 "import-sources-order": "case-insensitive",

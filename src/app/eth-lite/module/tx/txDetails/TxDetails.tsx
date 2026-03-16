@@ -20,6 +20,8 @@ import { ITxReceipt } from "app/eth-lite/data/tx/receipt/ITxReceipt";
 import { IBlockBasicInfo } from "app/shared/data/block/IBlockBasicInfo";
 import { TxStatusBox } from "app/eth-lite/module/tx/txDetails/TxStatusBox";
 import { NotAvailableBox } from "app/shared/component/NotAvailableBox";
+import styled from "@alethio/explorer-ui/lib/styled-components";
+import { isTargetContract, decodeContractCall, IDecodedContractCall } from "./contractDecoder";
 
 export interface ITxDetailsProps {
     txHash: string;
@@ -32,11 +34,95 @@ export interface ITxDetailsProps {
     blockConfirmationsSlot?: JSX.Element[];
 }
 
+const DecodedCallWrapper = styled.div`
+    width: 100%;
+    background-color: ${({ theme }) => theme.colors.payloadBoxBg};
+    border-top: 1px solid ${({ theme }) => theme.colors.payloadBoxBorder};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.payloadBoxBorder};
+`;
+
+const DecodedCallHeader = styled.div`
+    color: ${({ theme }) => theme.colors.valueBox.primary.text};
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    line-height: 24px;
+    padding: 12px 16px;
+    border-bottom: 1px solid ${({ theme }) => theme.colors.payloadBoxBorder};
+`;
+
+const DecodedCallBody = styled.div`
+    padding: 24px 40px;
+    font-family: "Roboto Mono", monospace;
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 500;
+`;
+
+const DecodedCallRow = styled.div`
+    display: flex;
+    padding: 10px 0;
+`;
+
+const ArgName = styled.span`
+    color: ${({ theme }) => theme.colors.payloadDataName};
+    flex: 0 0 auto;
+    padding-right: 8px;
+`;
+
+const ArgType = styled.span`
+    color: ${({ theme }) => theme.colors.payloadDataType};
+    flex: 0 0 auto;
+    padding-right: 8px;
+`;
+
+const ArgValue = styled.span`
+    color: ${({ theme }) => theme.colors.payloadDataValue};
+    flex: 1 1 auto;
+    word-break: break-all;
+`;
+
+const FunctionName = styled.span`
+    color: ${({ theme }) => theme.colors.payloadDataName};
+`;
+
+interface IDecodedCallViewProps {
+    decoded: IDecodedContractCall;
+    label: string;
+}
+
+class DecodedCallView extends React.PureComponent<IDecodedCallViewProps> {
+    render() {
+        const { decoded, label } = this.props;
+        return (
+            <DecodedCallWrapper>
+                <DecodedCallHeader>{label}</DecodedCallHeader>
+                <DecodedCallBody>
+                    <DecodedCallRow>
+                        <ArgName>function</ArgName>
+                        <FunctionName>{decoded.functionName}</FunctionName>
+                    </DecodedCallRow>
+                    {decoded.inputs.map((arg: any, idx: any) => (
+                        <DecodedCallRow key={idx}>
+                            <ArgName>{arg.name}</ArgName>
+                            <ArgType>{arg.type}</ArgType>
+                            <ArgValue>{arg.value}</ArgValue>
+                        </DecodedCallRow>
+                    ))}
+                </DecodedCallBody>
+            </DecodedCallWrapper>
+        );
+    }
+}
+
 export class TxDetails extends React.PureComponent<ITxDetailsProps> {
     render() {
         let {
             translation: tr, txDetails: tx, blockBasicInfo: block, txReceipt, locale, blockConfirmationsSlot, ethSymbol
         } = this.props;
+
+        const shouldDecode = tx.to && isTargetContract(tx.to);
+        const decoded = shouldDecode && tx.payload ? decodeContractCall(tx.to, tx.payload) : undefined;
 
         return <>
             <LayoutSection useWrapper>
@@ -48,9 +134,9 @@ export class TxDetails extends React.PureComponent<ITxDetailsProps> {
                     <LayoutRowItem>
                         <Label arrow disabled={tx.value.isZero()}>{tr.get("txView.content.txValue.label")}</Label>
                         <EthValueBox wei={tx.value} locale={locale} symbol={ethSymbol} />
-                        { txReceipt ?
-                        <TxStatusBox txReceipt={txReceipt} translation={tr} />
-                        : <NotAvailableBox translation={tr} /> }
+                        {txReceipt ?
+                            <TxStatusBox txReceipt={txReceipt} translation={tr} />
+                            : <NotAvailableBox translation={tr} />}
                     </LayoutRowItem>
                 </LayoutRow>
                 <LayoutRow minWidth={780}>
@@ -60,14 +146,14 @@ export class TxDetails extends React.PureComponent<ITxDetailsProps> {
                     </LayoutRowItem>
                     <LayoutRowItem>
                         {block && block.creationTime ?
-                        <>
-                        <Label>{tr.get("blockView.content.blockCreationTime.label")}</Label>
-                        <TimeElapsedBox timestamp={block.creationTime}
-                            translation={tr}
-                            locale={locale} />
-                        </>
-                        : null }
-                        { blockConfirmationsSlot }
+                            <>
+                                <Label>{tr.get("blockView.content.blockCreationTime.label")}</Label>
+                                <TimeElapsedBox timestamp={block.creationTime}
+                                    translation={tr}
+                                    locale={locale} />
+                            </>
+                            : null}
+                        {blockConfirmationsSlot}
                     </LayoutRowItem>
                 </LayoutRow>
                 <LayoutRow minWidth={650}>
@@ -85,14 +171,14 @@ export class TxDetails extends React.PureComponent<ITxDetailsProps> {
                         <Label>{tr.get("general.from")}</Label>
                         <AddressHashBox>{tx.from}</AddressHashBox>
                     </LayoutRowItem>
-                    { tx.to && <LayoutRowItem>
+                    {tx.to && <LayoutRowItem>
                         <Label>{tr.get("general.to")}</Label>
                         <AddressHashBox>{tx.to}</AddressHashBox>
-                    </LayoutRowItem> }
-                    { txReceipt && txReceipt.contractAddress && <LayoutRowItem>
+                    </LayoutRowItem>}
+                    {txReceipt && txReceipt.contractAddress && <LayoutRowItem>
                         <Label>{tr.get("general.creates")}</Label>
                         <AddressHashBox>{txReceipt.contractAddress}</AddressHashBox>
-                    </LayoutRowItem> }
+                    </LayoutRowItem>}
                 </LayoutRow>
             </LayoutSection>
             <LayoutSection useWrapper>
@@ -106,7 +192,7 @@ export class TxDetails extends React.PureComponent<ITxDetailsProps> {
                         <GweiValueBox wei={tx.gasPrice} locale={locale} />
                     </LayoutRowItem>
                 </LayoutRow>
-                { txReceipt && <LayoutRow minWidth={750}>
+                {txReceipt && <LayoutRow minWidth={750}>
                     <LayoutRowItem>
                         <Label>{tr.get("txView.content.gasUsed.label")}</Label>
                         <GasUsedValueBox value={txReceipt.gasUsed} limit={tx.gasLimit} locale={locale} />
@@ -116,33 +202,39 @@ export class TxDetails extends React.PureComponent<ITxDetailsProps> {
                         <EthValueBox wei={txReceipt.gasUsed.multipliedBy(tx.gasPrice)} decimals={9} locale={locale}
                             symbol={ethSymbol} />
                     </LayoutRowItem>
-                </LayoutRow> }
-                { txReceipt && <LayoutRow>
+                </LayoutRow>}
+                {txReceipt && <LayoutRow>
                     <LayoutRowItem>
                         <Label>{tr.get("txView.content.cumulativeGasUsed.label")}</Label>
                         <NumberBox value={txReceipt.cumulativeGasUsed} locale={locale} />
                     </LayoutRowItem>
-                </LayoutRow> }
+                </LayoutRow>}
             </LayoutSection>
-            { txReceipt && !txReceipt.status ?
-            <LayoutSection>
-                <LayoutRow>
-                    <LayoutRowItem>
-                        <Label>{tr.get("txView.content.error.label")}</Label>
-                        <ValueBox colors="error">{tr.get("txView.content.error.genericValue")}</ValueBox>
-                        <ErrorIcon />
-                    </LayoutRowItem>
-                </LayoutRow>
-            </LayoutSection>
-            : null }
-            { tx.payload ?
-                <LayoutRow>
-                    <LayoutRowItem fullRow autoHeight>
-                        <Label>{tr.get("txView.content.inputData.label")}</Label>
-                        <HexData data={tx.payload} />
-                    </LayoutRowItem>
-                </LayoutRow>
-            : null }
+            {txReceipt && !txReceipt.status ?
+                <LayoutSection>
+                    <LayoutRow>
+                        <LayoutRowItem>
+                            <Label>{tr.get("txView.content.error.label")}</Label>
+                            <ValueBox colors="error">{tr.get("txView.content.error.genericValue")}</ValueBox>
+                            <ErrorIcon />
+                        </LayoutRowItem>
+                    </LayoutRow>
+                </LayoutSection>
+                : null}
+            {tx.payload ?
+                decoded ?
+                    <DecodedCallView
+                        decoded={decoded}
+                        label={tr.get("txView.content.inputData.label")}
+                    />
+                    :
+                    <LayoutRow>
+                        <LayoutRowItem fullRow autoHeight>
+                            <Label>{tr.get("txView.content.inputData.label")}</Label>
+                            <HexData data={tx.payload} />
+                        </LayoutRowItem>
+                    </LayoutRow>
+                : null}
         </>;
     }
 }

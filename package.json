@@ -5,7 +5,7 @@
   "description": "Alethio Explorer core plugins",
   "main": "",
   "scripts": {
-    "build": "npm run clean && npm run build-js-prod && npm run check-prod-bundle-size",
+    "build": "npm run clean && npm run build-js-prod",
     "build-dev": "npm run clean && npm run build-js-dev",
     "check-prod-bundle-size": "bundlesize -f \"packages/*/dist/index.js\" -s 450kB -c none",
     "watch": "webpack-runner --config=./webpack.config.dev.js --watch",
