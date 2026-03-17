@@ -19,23 +19,14 @@ export class LatestBlockInfo extends React.Component<ILatestBlockInfoProps> {
         let { translation: tr, locale } = this.props;
 
         return (
-            <div style={{display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
+            <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
                 <LayoutRowItem>
-                    <Label>{ tr.get("dashboardView.content.latestBlock.label") }</Label>
-                    <BlockNumberBox>{ this.props.lastBlock.id }</BlockNumberBox>
+                    <Label>{tr.get("dashboardView.content.latestBlock.label")}</Label>
+                    <BlockNumberBox>{this.props.lastBlock.id}</BlockNumberBox>
                 </LayoutRowItem>
-                { this.props.lastBlock.creationTime ?
-                <LayoutRowItem>
-                    <Label>{tr.get("blockView.content.blockCreationTime.label")}</Label>
-                    <TimeElapsedBox timestamp={this.props.lastBlock.creationTime}
-                        translation={tr}
-                        nonclickable
-                        locale={locale} />
-                </LayoutRowItem>
-                : null }
                 <LayoutRowItem>
                     <Label>{tr.get("blockView.content.transactions.label")}</Label>
-                    <TxCountBox>{ this.props.lastBlock.transactions.length }</TxCountBox>
+                    <TxCountBox>{this.props.lastBlock.transactions.length}</TxCountBox>
                 </LayoutRowItem>
                 <LayoutRowItem>
                     <Label>{tr.get("blockView.content.uncles.label")}</Label>

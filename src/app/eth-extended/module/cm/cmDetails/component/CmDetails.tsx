@@ -62,12 +62,12 @@ export class CmDetails extends React.PureComponent<ICmDetailsProps> {
                             locale={locale}
                             symbol={ethSymbol}
                         />
-                        { latestEthPrice ?
-                        <UsdValueBox
-                            value={weiToEth(cm.value).multipliedBy(latestEthPrice).toNumber()}
-                            locale={locale}
-                        />
-                        : null }
+                        {latestEthPrice ?
+                            <UsdValueBox
+                                value={weiToEth(cm.value).multipliedBy(latestEthPrice).toNumber()}
+                                locale={locale}
+                            />
+                            : null}
                         <CmStatus cm={cm} translation={tr} />
                     </LayoutRowItem>
                 </LayoutRow>
@@ -78,10 +78,10 @@ export class CmDetails extends React.PureComponent<ICmDetailsProps> {
                     </LayoutRowItem>
                     <LayoutRowItem>
                         <Label>{tr.get("cmView.content.triggeredBy.label")}</Label>
-                        { cm.parentTxValidationIndex > 0 ?
-                        <CmIdBox txHash={this.props.txHash} txValidationIndex={cm.parentTxValidationIndex} />
-                        :
-                        <TxHashBox>{this.props.txHash}</TxHashBox>
+                        {cm.parentTxValidationIndex > 0 ?
+                            <CmIdBox txHash={this.props.txHash} txValidationIndex={cm.parentTxValidationIndex} />
+                            :
+                            <TxHashBox>{this.props.txHash}</TxHashBox>
                         }
                     </LayoutRowItem>
                 </LayoutRow>
@@ -89,16 +89,6 @@ export class CmDetails extends React.PureComponent<ICmDetailsProps> {
                     <LayoutRowItem>
                         <Label>{tr.get("blockView.content.blockNumber.label")}</Label>
                         <BlockNumberBox>{cm.block.id}</BlockNumberBox>
-                    </LayoutRowItem>
-                    <LayoutRowItem>
-                        {cm.block.creationTime ?
-                        <>
-                        <Label>{tr.get("blockView.content.blockCreationTime.label")}</Label>
-                        <TimeElapsedBox timestamp={cm.block.creationTime}
-                            translation={tr}
-                            locale={locale} />
-                        </>
-                        : null }
                     </LayoutRowItem>
                 </LayoutRow>
                 <LayoutRow minWidth={650}>
@@ -120,54 +110,54 @@ export class CmDetails extends React.PureComponent<ICmDetailsProps> {
                     </LayoutRowItem>
                 </LayoutRow>
             </LayoutSection>
-            { cm.type !== CmType.SelfDestruct ?
+            {cm.type !== CmType.SelfDestruct ?
+                <LayoutSection>
+                    <LayoutRow minWidth={600}>
+                        <LayoutRowItem>
+                            <Label>{tr.get("general.gasLimit")}</Label>
+                            <NumberBox value={cm.gasLimit} locale={locale} />
+                        </LayoutRowItem>
+                        <LayoutRowItem>
+                            <Label>{tr.get("general.gasPrice")}</Label>
+                            <GweiValueBox wei={cm.gasPrice} locale={locale} />
+                        </LayoutRowItem>
+                    </LayoutRow>
+                    <LayoutRow minWidth={750}>
+                        <LayoutRowItem>
+                            <Label>{tr.get("cmView.content.gasUsed.label")}</Label>
+                            <GasUsedValueBox value={cm.gasUsed} limit={cm.gasLimit} locale={locale} />
+                        </LayoutRowItem>
+                        <LayoutRowItem>
+                            <Label>{tr.get("cmView.content.cmFee.label")}</Label>
+                            <EthValueBox wei={cm.gasUsed.multipliedBy(cm.gasPrice)} decimals={9} locale={locale}
+                                symbol={ethSymbol} />
+                            {latestEthPrice ?
+                                <UsdValueBox colors="highlight"
+                                    value={weiToEth(cm.gasUsed.multipliedBy(cm.gasPrice))
+                                        .multipliedBy(latestEthPrice).toNumber()} locale={locale} />
+                                : null}
+                        </LayoutRowItem>
+                    </LayoutRow>
+                </LayoutSection>
+                : null}
             <LayoutSection>
-                <LayoutRow minWidth={600}>
-                    <LayoutRowItem>
-                        <Label>{tr.get("general.gasLimit")}</Label>
-                        <NumberBox value={cm.gasLimit} locale={locale} />
-                    </LayoutRowItem>
-                    <LayoutRowItem>
-                        <Label>{tr.get("general.gasPrice")}</Label>
-                        <GweiValueBox wei={cm.gasPrice} locale={locale} />
-                    </LayoutRowItem>
-                </LayoutRow>
-                <LayoutRow minWidth={750}>
-                    <LayoutRowItem>
-                        <Label>{tr.get("cmView.content.gasUsed.label")}</Label>
-                        <GasUsedValueBox value={cm.gasUsed} limit={cm.gasLimit} locale={locale} />
-                    </LayoutRowItem>
-                    <LayoutRowItem>
-                        <Label>{tr.get("cmView.content.cmFee.label")}</Label>
-                        <EthValueBox wei={cm.gasUsed.multipliedBy(cm.gasPrice)} decimals={9} locale={locale}
-                            symbol={ethSymbol} />
-                        { latestEthPrice ?
-                        <UsdValueBox colors="highlight"
-                            value={weiToEth(cm.gasUsed.multipliedBy(cm.gasPrice))
-                                .multipliedBy(latestEthPrice).toNumber()} locale={locale} />
-                        : null }
-                    </LayoutRowItem>
-                </LayoutRow>
-            </LayoutSection>
-            : null }
-            <LayoutSection>
-                { cm.output ?
-                <LayoutRow>
-                    <LayoutRowItem fullRow autoHeight>
-                        <Label>{tr.get("cmView.content.cmOutput.label")}</Label>
-                        <HexData data={cm.output} />
-                    </LayoutRowItem>
-                </LayoutRow>
-                : null }
-                { cm.error ?
-                <LayoutRow>
-                    <LayoutRowItem>
-                        <Label>{tr.get("txView.content.error.label")}</Label>
-                        <ValueBox colors="error">{cm.error}</ValueBox>
-                        <ErrorIcon />
-                    </LayoutRowItem>
-                </LayoutRow>
-                : null }
+                {cm.output ?
+                    <LayoutRow>
+                        <LayoutRowItem fullRow autoHeight>
+                            <Label>{tr.get("cmView.content.cmOutput.label")}</Label>
+                            <HexData data={cm.output} />
+                        </LayoutRowItem>
+                    </LayoutRow>
+                    : null}
+                {cm.error ?
+                    <LayoutRow>
+                        <LayoutRowItem>
+                            <Label>{tr.get("txView.content.error.label")}</Label>
+                            <ValueBox colors="error">{cm.error}</ValueBox>
+                            <ErrorIcon />
+                        </LayoutRowItem>
+                    </LayoutRow>
+                    : null}
             </LayoutSection>
             <LayoutSection>
                 <LayoutRow>
@@ -189,7 +179,7 @@ export class CmDetails extends React.PureComponent<ICmDetailsProps> {
                             {cm.traceAddr.map((i, idx) => idx ? <React.Fragment key={idx}>
                                 <TraceArrow />{i}
                             </React.Fragment> :
-                            i)}
+                                i)}
                         </TraceValueBox>
                     </LayoutRowItem>
                 </LayoutRow>
@@ -200,7 +190,7 @@ export class CmDetails extends React.PureComponent<ICmDetailsProps> {
                     </LayoutRowItem>
                 </LayoutRow>
             </LayoutSection>
-            { this.props.modules && this.props.modules.map((m, i) => <LayoutSection key={i}>{m}</LayoutSection>)}
+            {this.props.modules && this.props.modules.map((m, i) => <LayoutSection key={i}>{m}</LayoutSection>)}
         </>;
     }
 }

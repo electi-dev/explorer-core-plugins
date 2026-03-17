@@ -40,17 +40,6 @@ export class BlockDetails extends React.PureComponent<IBlockDetailsProps> {
                         <BlockNumberBox noLink>{block.id}</BlockNumberBox>
                     </LayoutRowItem>
                     <LayoutRowItem>
-                        { block.creationTime ?
-                        <>
-                        <Label>{tr.get("blockView.content.blockCreationTime.label")}</Label>
-                        <TimeElapsedBox timestamp={block.creationTime}
-                            translation={tr}
-                            locale={locale} />
-                        </>
-                        : null }
-                        { slots[BlockDetailsSlotType.Confirmations] }
-                    </LayoutRowItem>
-                    <LayoutRowItem>
                         <Label>{tr.get("blockView.content.uncles.label")}</Label>
                         <UnclesCountBox locale={locale}>{block.uncles.length}</UnclesCountBox>
                     </LayoutRowItem>
@@ -61,55 +50,55 @@ export class BlockDetails extends React.PureComponent<IBlockDetailsProps> {
                         <BlockHashBox>{block.hash}</BlockHashBox>
                     </LayoutRowItem>
                     {block.parentHash ?
-                    <LayoutRowItem>
-                        <Label>{tr.get("blockView.content.parentHash.label")}</Label>
-                        <ParentHashBox
-                            linkTo={block.parentId !== void 0 ?
-                                `page://aleth.io/block?blockNumber=${block.parentId}` :
-                                void 0}
-                        >
-                            {block.parentHash}
-                        </ParentHashBox>
-                    </LayoutRowItem> : null }
-                </LayoutRow>
-                { block.uncles.length ?
-                <LayoutRow>
-                    <LayoutRowItem fullRow>
-                        <Label>{tr.get("blockView.content.uncles.label")}</Label>
-                        {block.uncles.map((uncleHash, idx) => (
-                            <UncleHashBox key={uncleHash}
-                                linkTo={`page://aleth.io/uncle?blockNumber=${block.id}&uncleIndex=${idx}`}
+                        <LayoutRowItem>
+                            <Label>{tr.get("blockView.content.parentHash.label")}</Label>
+                            <ParentHashBox
+                                linkTo={block.parentId !== void 0 ?
+                                    `page://aleth.io/block?blockNumber=${block.parentId}` :
+                                    void 0}
                             >
-                                {uncleHash}
-                            </UncleHashBox>
-                        ))}
-                    </LayoutRowItem>
+                                {block.parentHash}
+                            </ParentHashBox>
+                        </LayoutRowItem> : null}
                 </LayoutRow>
-                : null }
-                { block.nonce ?
-                <LayoutRow minWidth={710}>
-                    <LayoutRowItem>
-                        <Label>{tr.get("general.nonce")}</Label>
-                        <HashValueBox>{block.nonce}</HashValueBox>
-                    </LayoutRowItem>
-                    <LayoutRowItem>
-                        <Label>{tr.get("blockView.content.blockSize.label")}</Label>
-                        <BlockSizeBox bytes={block.byteSize} locale={locale} translations={{
-                            bytes: tr.get("general.bytes")
-                        }} />
-                    </LayoutRowItem>
-                </LayoutRow>
-                : null }
+                {block.uncles.length ?
+                    <LayoutRow>
+                        <LayoutRowItem fullRow>
+                            <Label>{tr.get("blockView.content.uncles.label")}</Label>
+                            {block.uncles.map((uncleHash, idx) => (
+                                <UncleHashBox key={uncleHash}
+                                    linkTo={`page://aleth.io/uncle?blockNumber=${block.id}&uncleIndex=${idx}`}
+                                >
+                                    {uncleHash}
+                                </UncleHashBox>
+                            ))}
+                        </LayoutRowItem>
+                    </LayoutRow>
+                    : null}
+                {block.nonce ?
+                    <LayoutRow minWidth={710}>
+                        <LayoutRowItem>
+                            <Label>{tr.get("general.nonce")}</Label>
+                            <HashValueBox>{block.nonce}</HashValueBox>
+                        </LayoutRowItem>
+                        <LayoutRowItem>
+                            <Label>{tr.get("blockView.content.blockSize.label")}</Label>
+                            <BlockSizeBox bytes={block.byteSize} locale={locale} translations={{
+                                bytes: tr.get("general.bytes")
+                            }} />
+                        </LayoutRowItem>
+                    </LayoutRow>
+                    : null}
             </LayoutSection>
-            { slots[BlockDetailsSlotType.Txs]}
+            {slots[BlockDetailsSlotType.Txs]}
             <LayoutSection useWrapper>
                 <LayoutRow minWidth={760}>
-                    { block.sha3uncles ?
-                    <LayoutRowItem>
-                        <Label>{tr.get("blockView.content.sha3Uncles.label")}</Label>
-                        <HashValueBox>{block.sha3uncles}</HashValueBox>
-                    </LayoutRowItem>
-                    : null }
+                    {block.sha3uncles ?
+                        <LayoutRowItem>
+                            <Label>{tr.get("blockView.content.sha3Uncles.label")}</Label>
+                            <HashValueBox>{block.sha3uncles}</HashValueBox>
+                        </LayoutRowItem>
+                        : null}
                 </LayoutRow>
                 <LayoutRow>
                     <LayoutRowItem fullRow>
@@ -133,21 +122,21 @@ export class BlockDetails extends React.PureComponent<IBlockDetailsProps> {
                         <DifficultyBox value={block.difficulty} locale={locale} />
                     </LayoutRowItem>
                 </LayoutRow>
-                { slots && slots[BlockDetailsSlotType.ExtraData] ||
-                <LayoutRow>
-                    <LayoutRowItem autoHeight>
-                        <Label>{tr.get("blockView.content.extraData.label")}</Label>
-                        <DecodedHexData data={block.extraData} />
-                    </LayoutRowItem>
-                </LayoutRow> }
-                { block.mixHash ?
-                <LayoutRow minWidth={760}>
-                    <LayoutRowItem>
-                        <Label>{tr.get("blockView.content.mixHash.label")}</Label>
-                        <HashValueBox>{block.mixHash}</HashValueBox>
-                    </LayoutRowItem>
-                </LayoutRow>
-                : null }
+                {slots && slots[BlockDetailsSlotType.ExtraData] ||
+                    <LayoutRow>
+                        <LayoutRowItem autoHeight>
+                            <Label>{tr.get("blockView.content.extraData.label")}</Label>
+                            <DecodedHexData data={block.extraData} />
+                        </LayoutRowItem>
+                    </LayoutRow>}
+                {block.mixHash ?
+                    <LayoutRow minWidth={760}>
+                        <LayoutRowItem>
+                            <Label>{tr.get("blockView.content.mixHash.label")}</Label>
+                            <HashValueBox>{block.mixHash}</HashValueBox>
+                        </LayoutRowItem>
+                    </LayoutRow>
+                    : null}
             </LayoutSection>
             <LayoutSection useWrapper>
                 <LayoutRow>

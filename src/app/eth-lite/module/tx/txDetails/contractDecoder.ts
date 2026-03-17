@@ -457,7 +457,6 @@ export interface IDecodedContractCall {
 }
 
 export function isTargetContract(toAddress: string): boolean {
-    console.log(toAddress, toAddress.toLowerCase() in CONTRACTS)
     return toAddress.toLowerCase() in CONTRACTS;
 }
 

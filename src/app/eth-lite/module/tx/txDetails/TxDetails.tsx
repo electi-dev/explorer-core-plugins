@@ -145,14 +145,6 @@ export class TxDetails extends React.PureComponent<ITxDetailsProps> {
                         <BlockNumberBox>{tx.block.id}</BlockNumberBox>
                     </LayoutRowItem>
                     <LayoutRowItem>
-                        {block && block.creationTime ?
-                            <>
-                                <Label>{tr.get("blockView.content.blockCreationTime.label")}</Label>
-                                <TimeElapsedBox timestamp={block.creationTime}
-                                    translation={tr}
-                                    locale={locale} />
-                            </>
-                            : null}
                         {blockConfirmationsSlot}
                     </LayoutRowItem>
                 </LayoutRow>

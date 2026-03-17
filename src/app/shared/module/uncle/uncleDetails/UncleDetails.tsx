@@ -38,21 +38,13 @@ export class UncleDetails extends React.PureComponent<IUncleDetailsProps> {
                     <UncleNumberBox>{uncle.id}</UncleNumberBox>
                 </LayoutRowItem>
                 <LayoutRowItem>
-                    {uncle.creationTime ?
-                    <>
-                    <Label>{tr.get("blockView.content.blockCreationTime.label")}</Label>
-                    <TimeElapsedBox timestamp={uncle.creationTime}
-                        translation={tr}
-                        locale={locale} />
-                    </>
-                    : null }
                 </LayoutRowItem>
-                { uncle.position !== void 0 ?
-                <LayoutRowItem>
-                    <Label>{tr.get("uncleView.content.position.label")}</Label>
-                    <ValueBox>{uncle.position}</ValueBox>
-                </LayoutRowItem>
-                : null }
+                {uncle.position !== void 0 ?
+                    <LayoutRowItem>
+                        <Label>{tr.get("uncleView.content.position.label")}</Label>
+                        <ValueBox>{uncle.position}</ValueBox>
+                    </LayoutRowItem>
+                    : null}
             </LayoutRow>
             <LayoutRow minWidth={760}>
                 <LayoutRowItem>
@@ -60,10 +52,10 @@ export class UncleDetails extends React.PureComponent<IUncleDetailsProps> {
                     <UncleHashBox>{uncle.hash}</UncleHashBox>
                 </LayoutRowItem>
                 {uncle.parentId ?
-                <LayoutRowItem>
-                    <Label>{tr.get("uncleView.content.includedBy.label")}</Label>
-                    <BlockNumberBox>{uncle.parentId}</BlockNumberBox>
-                </LayoutRowItem> : null }
+                    <LayoutRowItem>
+                        <Label>{tr.get("uncleView.content.includedBy.label")}</Label>
+                        <BlockNumberBox>{uncle.parentId}</BlockNumberBox>
+                    </LayoutRowItem> : null}
             </LayoutRow>
             <LayoutRow>
                 <LayoutRowItem>
@@ -71,34 +63,34 @@ export class UncleDetails extends React.PureComponent<IUncleDetailsProps> {
                     <HashValueBox>{uncle.nonce}</HashValueBox>
                 </LayoutRowItem>
             </LayoutRow>
-            { uncle.sha3uncles ?
-            <LayoutRow>
-                <LayoutRowItem>
-                    <Label>{tr.get("blockView.content.sha3Uncles.label")}</Label>
-                    <HashValueBox>{uncle.sha3uncles}</HashValueBox>
-                </LayoutRowItem>
-            </LayoutRow>
-            : null }
-            { uncle.beneficiaryAddress ?
-            <LayoutRow>
-                <LayoutRowItem fullRow>
-                    <Label>{tr.get("blockView.content.beneficiary.label")}</Label>
-                    <AddressHashBox>{uncle.beneficiaryAddress}</AddressHashBox>
-                    { (uncle as IUncleDetailsExtended).beneficiaryName ?
-                    <Link to={`page://aleth.io/account?accountHash=${uncle.beneficiaryAddress}`}>
-                        <MinerLabelBox>{(uncle as IUncleDetailsExtended).beneficiaryName}</MinerLabelBox>
-                    </Link>
-                    : null }
-                    { uncleReward ?
-                    <>
-                    <Label arrow>{tr.get("blockView.content.beneficiary.reward.label")}</Label>
-                    <EthValueBox wei={uncleReward} locale={locale}
-                        symbol={ethSymbol} />
-                    </>
-                    : null }
-                </LayoutRowItem>
-            </LayoutRow>
-            : null }
+            {uncle.sha3uncles ?
+                <LayoutRow>
+                    <LayoutRowItem>
+                        <Label>{tr.get("blockView.content.sha3Uncles.label")}</Label>
+                        <HashValueBox>{uncle.sha3uncles}</HashValueBox>
+                    </LayoutRowItem>
+                </LayoutRow>
+                : null}
+            {uncle.beneficiaryAddress ?
+                <LayoutRow>
+                    <LayoutRowItem fullRow>
+                        <Label>{tr.get("blockView.content.beneficiary.label")}</Label>
+                        <AddressHashBox>{uncle.beneficiaryAddress}</AddressHashBox>
+                        {(uncle as IUncleDetailsExtended).beneficiaryName ?
+                            <Link to={`page://aleth.io/account?accountHash=${uncle.beneficiaryAddress}`}>
+                                <MinerLabelBox>{(uncle as IUncleDetailsExtended).beneficiaryName}</MinerLabelBox>
+                            </Link>
+                            : null}
+                        {uncleReward ?
+                            <>
+                                <Label arrow>{tr.get("blockView.content.beneficiary.reward.label")}</Label>
+                                <EthValueBox wei={uncleReward} locale={locale}
+                                    symbol={ethSymbol} />
+                            </>
+                            : null}
+                    </LayoutRowItem>
+                </LayoutRow>
+                : null}
             <LayoutRow>
                 <LayoutRowItem>
                     <Label>{tr.get("general.gasLimit")}</Label>
@@ -112,24 +104,24 @@ export class UncleDetails extends React.PureComponent<IUncleDetailsProps> {
                         value={uncle.difficulty} locale={locale} />
                 </LayoutRowItem>
             </LayoutRow>
-            { uncle.extraData ?
-            <LayoutRow>
-                <LayoutRowItem>
-                    <Label>{tr.get("blockView.content.extraData.label")}</Label>
-                    <DecodedHexData data={uncle.extraData} />
-                </LayoutRowItem>
-            </LayoutRow>
-            : null }
-            { uncle.mixHash ?
-            <LayoutRow>
-                { uncle.mixHash ?
-                <LayoutRowItem>
-                    <Label>{tr.get("blockView.content.mixHash.label")}</Label>
-                    <HashValueBox>{uncle.mixHash}</HashValueBox>
-                </LayoutRowItem>
-                : [] }
-            </LayoutRow>
-            : null }
+            {uncle.extraData ?
+                <LayoutRow>
+                    <LayoutRowItem>
+                        <Label>{tr.get("blockView.content.extraData.label")}</Label>
+                        <DecodedHexData data={uncle.extraData} />
+                    </LayoutRowItem>
+                </LayoutRow>
+                : null}
+            {uncle.mixHash ?
+                <LayoutRow>
+                    {uncle.mixHash ?
+                        <LayoutRowItem>
+                            <Label>{tr.get("blockView.content.mixHash.label")}</Label>
+                            <HashValueBox>{uncle.mixHash}</HashValueBox>
+                        </LayoutRowItem>
+                        : []}
+                </LayoutRow>
+                : null}
         </>;
     }
 }

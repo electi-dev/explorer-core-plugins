@@ -38,15 +38,7 @@ export class BlockBasic extends React.PureComponent<IBlockBasicProps> {
                     <BlockNumberBox noLink>{block.id}</BlockNumberBox>
                 </LayoutRowItem>
                 <LayoutRowItem>
-                    {block.creationTime ?
-                    <>
-                    <Label>{tr.get("blockView.content.blockCreationTime.label")}</Label>
-                    <TimeElapsedBox timestamp={block.creationTime}
-                        translation={tr}
-                        locale={locale} />
-                    </>
-                    : null }
-                    { slots[BlockBasicSlotType.Confirmations] }
+                    {slots[BlockBasicSlotType.Confirmations]}
                 </LayoutRowItem>
                 <LayoutRowItem>
                     <Label>{tr.get("blockView.content.uncles.label")}</Label>
@@ -56,39 +48,39 @@ export class BlockBasic extends React.PureComponent<IBlockBasicProps> {
             <LayoutRow minWidth={760}>
                 <LayoutRowItem>
                     <Label>{tr.get("general.hash")}</Label>
-                    { block.inconsistentWarning ?
+                    {block.inconsistentWarning ?
                         <TooltipRegular content={
-                            <div style={{width: 450, textAlign: "center"}}>
-                                { tr.get("blockView.content.inconsistentWarning.text") }
+                            <div style={{ width: 450, textAlign: "center" }}>
+                                {tr.get("blockView.content.inconsistentWarning.text")}
                             </div>
                         }>
                             <ErrorIcon />
                         </TooltipRegular>
-                    : null}
+                        : null}
                     <BlockHashBox>{block.hash}</BlockHashBox>
                 </LayoutRowItem>
                 {block.parentHash ?
-                <LayoutRowItem>
-                    <Label>{tr.get("blockView.content.parentHash.label")}</Label>
-                    <ParentHashBox
-                        linkTo={block.parentId ? `page://aleth.io/block?blockNumber=${block.parentId}` : void 0}
-                    >
-                        {block.parentHash}
-                    </ParentHashBox>
-                </LayoutRowItem> : null }
+                    <LayoutRowItem>
+                        <Label>{tr.get("blockView.content.parentHash.label")}</Label>
+                        <ParentHashBox
+                            linkTo={block.parentId ? `page://aleth.io/block?blockNumber=${block.parentId}` : void 0}
+                        >
+                            {block.parentHash}
+                        </ParentHashBox>
+                    </LayoutRowItem> : null}
             </LayoutRow>
-            { block.uncles.length ?
-            <LayoutRow>
-                <LayoutRowItem fullRow>
-                    <Label>{tr.get("blockView.content.uncles.label")}</Label>
-                    {block.uncles.map(uncleHash => (
-                        <UncleHashBox key={uncleHash} linkTo={`page://aleth.io/uncle?uncleHash=${uncleHash}`}>
-                            {uncleHash}
-                        </UncleHashBox>
-                    ))}
-                </LayoutRowItem>
-            </LayoutRow>
-            : null }
+            {block.uncles.length ?
+                <LayoutRow>
+                    <LayoutRowItem fullRow>
+                        <Label>{tr.get("blockView.content.uncles.label")}</Label>
+                        {block.uncles.map(uncleHash => (
+                            <UncleHashBox key={uncleHash} linkTo={`page://aleth.io/uncle?uncleHash=${uncleHash}`}>
+                                {uncleHash}
+                            </UncleHashBox>
+                        ))}
+                    </LayoutRowItem>
+                </LayoutRow>
+                : null}
             <LayoutRow minWidth={710}>
                 <LayoutRowItem>
                     <Label>{tr.get("general.nonce")}</Label>
@@ -101,16 +93,16 @@ export class BlockBasic extends React.PureComponent<IBlockBasicProps> {
                     }} />
                 </LayoutRowItem>
             </LayoutRow>
-            { block.transactions.length && isFullTxLite(block.transactions[0]) ?
-            <LayoutRow>
-                <LayoutRowItem fullRow autoHeight>
-                    <Label>{tr.get("blockView.content.blockSummary.label")}</Label>
-                    <div style={{maxWidth: 500, flex: "1 1 auto"}}>
-                        <BlockSummary transactions={block.transactions as ITxLiteFull[]} translation={tr}/>
-                    </div>
-                </LayoutRowItem>
-            </LayoutRow>
-            : null }
+            {block.transactions.length && isFullTxLite(block.transactions[0]) ?
+                <LayoutRow>
+                    <LayoutRowItem fullRow autoHeight>
+                        <Label>{tr.get("blockView.content.blockSummary.label")}</Label>
+                        <div style={{ maxWidth: 500, flex: "1 1 auto" }}>
+                            <BlockSummary transactions={block.transactions as ITxLiteFull[]} translation={tr} />
+                        </div>
+                    </LayoutRowItem>
+                </LayoutRow>
+                : null}
         </LayoutSection>;
     }
 }

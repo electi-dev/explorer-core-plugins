@@ -41,59 +41,47 @@ export class TxBasic extends React.PureComponent<ITxBasicProps> {
                     <TxHashBox noLink>{this.props.txHash}</TxHashBox>
                 </LayoutRowItem>
                 <LayoutRowItem>
-                    { !isMementoTxDetails(tx) ?
-                    <>
-                    <Label>{tr.get("txView.content.txType.label")}</Label>
-                    <TxTypeBox>{tr.get("general.tx.type." + TxType[tx.type])}</TxTypeBox>
-                    </>
-                    : null }
+                    {!isMementoTxDetails(tx) ?
+                        <>
+                            <Label>{tr.get("txView.content.txType.label")}</Label>
+                            <TxTypeBox>{tr.get("general.tx.type." + TxType[tx.type])}</TxTypeBox>
+                        </>
+                        : null}
 
                     <Label arrow disabled={tx.value.isZero()}>{tr.get("txView.content.txValue.label")}</Label>
                     <EthValueBox wei={tx.value} locale={locale} symbol={ethSymbol} />
-                    { latestEthPrice ?
+                    {latestEthPrice ?
                         <UsdValueBox
                             value={weiToEth(tx.value).multipliedBy(latestEthPrice).toNumber()}
                             locale={locale}
                         />
-                    : null }
+                        : null}
                     <TxStatusBox tx={tx} translation={tr} />
                 </LayoutRowItem>
             </LayoutRow>
-            { !isPendingTxDetails(tx) ?
-            <LayoutRow minWidth={780}>
-                <LayoutRowItem>
-                    <Label>{tr.get("blockView.content.blockNumber.label")}</Label>
-                    <BlockNumberBox>{tx.block.id}</BlockNumberBox>
-                </LayoutRowItem>
-                <LayoutRowItem>
-                    {tx.block.creationTime ?
-                    <>
-                    <Label>{tr.get("blockView.content.blockCreationTime.label")}</Label>
-                    <TimeElapsedBox timestamp={tx.block.creationTime}
-                        translation={tr}
-                        locale={locale} />
-                    </>
-                    : null }
-                    { blockConfirmationsSlot }
-                </LayoutRowItem>
-            </LayoutRow>
-            :
-            <LayoutRow>
-                <LayoutRowItem>
-                    <Label>{tr.get("txView.content.firstSeen.label")}</Label>
-                    <TimeElapsedBox timestamp={tx.firstSeenAt}
-                        translation={tr}
-                        locale={locale} />
-                </LayoutRowItem>
-            </LayoutRow>
+            {!isPendingTxDetails(tx) ?
+                <LayoutRow minWidth={780}>
+                    <LayoutRowItem>
+                        <Label>{tr.get("blockView.content.blockNumber.label")}</Label>
+                        <BlockNumberBox>{tx.block.id}</BlockNumberBox>
+                    </LayoutRowItem>
+                    <LayoutRowItem>
+                        {blockConfirmationsSlot}
+                    </LayoutRowItem>
+                </LayoutRow>
+                :
+                <LayoutRow>
+                    <LayoutRowItem>
+                    </LayoutRowItem>
+                </LayoutRow>
             }
             <LayoutRow minWidth={650}>
-                { !isPendingTxDetails(tx) ?
-                <LayoutRowItem>
-                    <Label>{tr.get("txView.content.txIndex.label")}</Label>
-                    <NumberBox value={tx.txIndex} locale={locale} />
-                </LayoutRowItem>
-                : [] }
+                {!isPendingTxDetails(tx) ?
+                    <LayoutRowItem>
+                        <Label>{tr.get("txView.content.txIndex.label")}</Label>
+                        <NumberBox value={tx.txIndex} locale={locale} />
+                    </LayoutRowItem>
+                    : []}
                 <LayoutRowItem>
                     <Label>{tr.get("general.nonce")}</Label>
                     <NumberBox value={tx.nonce} locale={locale} />
@@ -106,7 +94,7 @@ export class TxBasic extends React.PureComponent<ITxBasicProps> {
                 </LayoutRowItem>
                 {isMementoTxDetails(tx) ?
                     <LayoutRowItem>
-                        <Label>{ tr.get("general.to")}</Label>
+                        <Label>{tr.get("general.to")}</Label>
                         <AddressHashBox>{tx.to}</AddressHashBox>
                     </LayoutRowItem>
                     :
