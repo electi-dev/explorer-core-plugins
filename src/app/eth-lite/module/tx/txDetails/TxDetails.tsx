@@ -21,7 +21,7 @@ import { IBlockBasicInfo } from "app/shared/data/block/IBlockBasicInfo";
 import { TxStatusBox } from "app/eth-lite/module/tx/txDetails/TxStatusBox";
 import { NotAvailableBox } from "app/shared/component/NotAvailableBox";
 import styled from "@alethio/explorer-ui/lib/styled-components";
-import { isTargetContract, decodeContractCall, IDecodedContractCall } from "./contractDecoder";
+import { fetchContractData, decodeContractCall, IDecodedContractCall, IContractData } from "./contractDecoder";
 
 export interface ITxDetailsProps {
     txHash: string;
@@ -32,6 +32,10 @@ export interface ITxDetailsProps {
     locale: string;
     ethSymbol: string;
     blockConfirmationsSlot?: JSX.Element[];
+}
+
+interface ITxDetailsState {
+    contractData: IContractData | null;
 }
 
 const DecodedCallWrapper = styled.div`
@@ -115,14 +119,39 @@ class DecodedCallView extends React.PureComponent<IDecodedCallViewProps> {
     }
 }
 
-export class TxDetails extends React.PureComponent<ITxDetailsProps> {
+export class TxDetails extends React.PureComponent<ITxDetailsProps, ITxDetailsState> {
+    state: ITxDetailsState = {
+        contractData: null
+    };
+
+    async fetchContract(address: string | undefined) {
+        if (!address) {
+            return;
+        }
+        const data = await fetchContractData(address);
+        this.setState({ contractData: data });
+    }
+
+    componentDidMount() {
+        void this.fetchContract(this.props.txDetails.to);
+    }
+
+    componentDidUpdate(prevProps: ITxDetailsProps) {
+        if (prevProps.txDetails.to !== this.props.txDetails.to) {
+            this.setState({ contractData: null });
+            void this.fetchContract(this.props.txDetails.to);
+        }
+    }
+
     render() {
         let {
             translation: tr, txDetails: tx, blockBasicInfo: block, txReceipt, locale, blockConfirmationsSlot, ethSymbol
         } = this.props;
 
-        const shouldDecode = tx.to && isTargetContract(tx.to);
-        const decoded = shouldDecode && tx.payload ? decodeContractCall(tx.to, tx.payload) : undefined;
+        const { contractData } = this.state;
+        const decoded = contractData && tx.payload
+            ? decodeContractCall(contractData, tx.payload)
+            : undefined;
 
         return <>
             <LayoutSection useWrapper>
